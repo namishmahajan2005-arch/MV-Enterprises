@@ -28,7 +28,7 @@ export function Details() {
     const [user, setUser] = useState(null); 
 
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/")
+        fetch("https://mv-enterprises-4.onrender.com/")
             .then(res => res.json())
             .then(data => setProducts(data))
             .catch(err => console.error("Failed to load products", err));
@@ -37,7 +37,7 @@ export function Details() {
     useEffect(() => {
         async function loadUser() {
             try {
-                const res = await authFetch("http://127.0.0.1:8000/api/me/");
+                const res = await authFetch("https://mv-enterprises-4.onrender.com/api/me/");
                 if (!res.ok) return;
                 const data = await res.json();
                 setUser(data);
@@ -77,7 +77,7 @@ export function Details() {
         setIsSubmitting(true);
 
         try {
-            const res = await authFetch("http://127.0.0.1:8000/order", {
+            const res = await authFetch("https://mv-enterprises-4.onrender.com/order", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -105,7 +105,7 @@ export function Details() {
         }
     };
 
-    const getImageUrl = (path) => path.startsWith('/') ? `http://127.0.0.1:8000${path}` : `http://127.0.0.1:8000/${path}`;
+    const getImageUrl = (path) => path.startsWith('/') ? `https://mv-enterprises-4.onrender.com${path}` : `https://mv-enterprises-4.onrender.com/${path}`;
 
     if (Object.keys(cart).length === 0) {
         return (

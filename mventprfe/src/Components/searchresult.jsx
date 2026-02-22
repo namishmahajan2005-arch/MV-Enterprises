@@ -10,7 +10,7 @@ export function Searchresult() {
     useEffect(() => {
         if (!query) return;
 
-        fetch(`http://127.0.0.1:8000/Search?q=${query}`)
+        fetch(`https://mv-enterprises-4.onrender.com/Search?q=${query}`)
             .then(res => res.json())
             .then(data => setProducts(data))
             .catch(err => console.error("Search fetch failed:", err));
@@ -18,7 +18,7 @@ export function Searchresult() {
 
     const getImageUrl = (path) => {
         if (!path) return null;
-        return path.startsWith('/') ? `http://127.0.0.1:8000${path}` : `http://127.0.0.1:8000/${path}`;
+        return path.startsWith('/') ? `https://mv-enterprises-4.onrender.com${path}` : `https://mv-enterprises-4.onrender.com/${path}`;
     };
 
     return (

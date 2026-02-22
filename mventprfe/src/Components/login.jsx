@@ -20,7 +20,7 @@ export default function Login() {
     }
     setLoading(true);
 
-    const res=await fetch("http://127.0.0.1:8000/api/token/",{
+    const res=await fetch("https://mv-enterprises-4.onrender.com/api/token/",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({username:gmail.trim(),password:password}),
@@ -41,7 +41,7 @@ export default function Login() {
   }
 
   const handleGoogleSuccess = async (credentialResponse) => {
-    const res = await fetch("http://127.0.0.1:8000/auth/google/", {
+    const res = await fetch("https://mv-enterprises-4.onrender.com/auth/google/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

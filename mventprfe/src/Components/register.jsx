@@ -18,7 +18,7 @@ export default function Register() {
             alert("All fields are required");
         }
 
-        const res=await fetch("http://127.0.0.1:8000/auth/register/",{
+        const res=await fetch("https://mv-enterprises-4.onrender.com/auth/register/",{
             method:"POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

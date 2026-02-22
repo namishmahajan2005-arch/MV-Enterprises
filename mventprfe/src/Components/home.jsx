@@ -8,7 +8,7 @@ export function Home() {
   console.log(products);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/")
+    fetch("https://mv-enterprises-4.onrender.com/")
       .then(res => res.json())
       .then(data => setProducts(data))
       .catch(err => console.error("Failed to fetch products:", err));
@@ -59,7 +59,7 @@ export function Home() {
                   >
                     <div className="relative aspect-square overflow-hidden bg-gray-50">
                       <img
-                        src={`http://127.0.0.1:8000${product.images[0]}`}
+                        src={`https://mv-enterprises-4.onrender.com${product.images[0]}`}
                         alt={subcat}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />

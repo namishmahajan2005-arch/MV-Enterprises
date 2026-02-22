@@ -17,7 +17,7 @@ export default function PaymentNavbar({ highlight }) {
             if (!token) return; 
 
             try {
-                const res = await authFetch("http://127.0.0.1:8000/auth/me/");
+                const res = await authFetch("https://mv-enterprises-4.onrender.com/auth/me/");
                 const data = await res.json();
                 setUsername(data.username);
             } catch {

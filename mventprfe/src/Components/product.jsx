@@ -77,7 +77,7 @@ export default function Product() {
         );
     }
 
-    const getImageUrl = (path) => `http://127.0.0.1:8000${path}`;
+    const getImageUrl = (path) => `https://mv-enterprises-4.onrender.com${path}`;
 
     return (
         <div className="min-h-screen bg-[#FAFAFA] font-sans text-[#1A1A1A]">

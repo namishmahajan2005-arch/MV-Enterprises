@@ -12,7 +12,7 @@ export default function MyOrders() {
     useEffect(()=>{
       async function fetchOrders(){
         try{
-          const res=await authFetch("http://127.0.0.1:8000/myorders");
+          const res=await authFetch("https://mv-enterprises-4.onrender.com/myorders");
           const data= await res.json();
           setOrders(data);
         }catch(err){

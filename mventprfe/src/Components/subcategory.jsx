@@ -12,7 +12,7 @@ export default function Subcategory() {
         p => p.item_subcategory === decodedSubcategory
     );
 
-    const getImageUrl = (path) => path ? `http://127.0.0.1:8000${path}` : null;
+    const getImageUrl = (path) => path ? `https://mv-enterprises-4.onrender.com${path}` : null;
 
     return (
         <div className="min-h-screen bg-[#FAFAFA] font-sans text-[#1A1A1A]">

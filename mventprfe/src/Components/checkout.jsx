@@ -14,7 +14,7 @@ export default function Checkout() {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/")
+        fetch("https://mv-enterprises-4.onrender.com/")
             .then(res => res.json())
             .then(data => setProducts(data))
             .catch(err => console.error("Failed to load products", err));
@@ -65,7 +65,7 @@ export default function Checkout() {
         });
     };
 
-    const getImageUrl = (path) => path.startsWith('/') ? `http://127.0.0.1:8000${path}` : `http://127.0.0.1:8000/${path}`;
+    const getImageUrl = (path) => path.startsWith('/') ? `https://mv-enterprises-4.onrender.com${path}` : `https://mv-enterprises-4.onrender.com/${path}`;
 
     return (
         <div className="min-h-screen bg-[#FAFAFA] font-sans text-[#1A1A1A]">
