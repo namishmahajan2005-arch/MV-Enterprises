@@ -136,6 +136,14 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
+ALLOWED_HOSTS = [
+    "https://mv-enterprises-4.onrender.com",
+    "https://mv-enterprises-36.vercel.app/",
+    ".onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
+
 TINYMCE_DEFAULT_CONFIG = {
     "height": 400,
     "width": "100%",
