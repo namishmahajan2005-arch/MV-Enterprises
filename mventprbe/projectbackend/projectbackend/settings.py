@@ -137,8 +137,7 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_CREDENTIALS = True
 
 ALLOWED_HOSTS = [
-    "https://mv-enterprises-4.onrender.com",
-    "https://mv-enterprises-36.vercel.app/",
+    "mv-enterprises-4.onrender.com",
     ".onrender.com",
     "localhost",
     "127.0.0.1",
