@@ -51,7 +51,7 @@ export default function OrderDetails() {
         
         <div className="mb-12">
           <Link 
-            to="/orders" 
+            to="/my-orders" 
             className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 hover:text-zinc-900 transition-colors duration-300 flex items-center gap-2 w-fit"
           >
             <span className="transform transition-transform duration-300 group-hover:-translate-x-1">←</span> Back to Orders

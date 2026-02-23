@@ -63,6 +63,7 @@ def order(request):
         validated_items.append({
             "product_id": product.id,
             "name": product.item_name,
+            "subcategory":product.subcategory,
             "price": str(product.item_newprice),
             "quantity": quantity
         })

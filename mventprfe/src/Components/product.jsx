@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Navbar } from './navbar';
 import { useLocation } from "react-router-dom";
 import { FiPlus, FiMinus, FiChevronLeft, FiChevronRight } from "react-icons/fi"; // Thinner, premium icons
@@ -6,6 +6,29 @@ import { FiPlus, FiMinus, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 export default function Product() {
     const location = useLocation();
     const product = location.state?.product;
+
+    const touchStartX = useRef(0);
+    const touchEndX = useRef(0);
+
+    const handleTouchStart = (e) => {
+        touchStartX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e) => {
+        touchEndX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchEnd = () => {
+        const diff = touchStartX.current - touchEndX.current;
+
+        if (Math.abs(diff) > 50) { 
+            if (diff > 0) {
+                nextImage();
+            } else {
+                prevImage();
+            }
+        }
+    };
 
     const [mainImageIndex, setMainImageIndex] = useState(0);
 
@@ -100,7 +123,7 @@ export default function Product() {
                             ))}
                         </div>
 
-                        <div className="relative w-full aspect-[4/5] md:aspect-[3/4] overflow-hidden bg-gray-100 group">
+                        <div className="relative w-full aspect-[4/5] md:aspect-[3/4] overflow-hidden bg-gray-100 group" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
                             {product.images?.length > 0 ? (
                                 <img 
                                     src={getImageUrl(product.images[mainImageIndex])} 

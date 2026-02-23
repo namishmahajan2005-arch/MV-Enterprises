@@ -62,16 +62,19 @@ export default function OrderCard({ order }) {
         </div>
 
         <div className="space-y-3">
-          {order.items.map((item, index) => (
+          {order.items.map((item, index) => {
+
+            return(
             <div key={index} className="flex justify-between items-center text-sm">
               <div className="flex items-center text-zinc-600">
                 <span className="w-6 text-zinc-400 font-serif italic text-xs">
                   {item.quantity}x
                 </span>
                 <span className="capitalize">{item.name}</span>
+                <span><Link to={`/subcategory/${item.subcategory}/product/${item.product_id}`}>View Product</Link></span>
               </div>
             </div>
-          ))}
+          )})}
         </div>
       </div>
 
