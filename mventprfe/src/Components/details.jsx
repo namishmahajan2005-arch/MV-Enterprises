@@ -62,6 +62,7 @@ export function Details() {
         return Object.entries(cart).map(([itemId, qty]) => {
             const product = products.find(p => p.id === Number(itemId));
             if (!product) return null;
+            console.log(product);
             return { product: product, quantity: qty };
         }).filter(Boolean);
     }, [cart, products]);
