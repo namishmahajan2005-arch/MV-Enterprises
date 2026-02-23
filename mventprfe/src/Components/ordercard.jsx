@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 function statusStyle(status) {
   if (!status) return "bg-zinc-100 text-zinc-500 border border-transparent";
-  
+
   switch (status.toLowerCase()) {
     case "placed": 
       return "bg-zinc-100 text-zinc-600 border border-transparent";
@@ -31,11 +32,18 @@ export default function OrderCard({ order }) {
     day: 'numeric'
   });
 
+  const [products,setProducts]=useState([]);
+  console.log(products);
+
+  useEffect(()=>{
+    fetch("https://mv-enterprises-4.onrender.com").
+    then(res => res.json())
+    .then(data => setProducts(data))
+    .catch(err => console.log("Failed to load products ",err))
+  },[]);
+  
   return (
-    <Link
-      to={`/orders/${order.order_id}`}
-      className="group block bg-white border border-zinc-200 p-6 md:p-8 hover:border-zinc-900 transition-colors duration-500"
-    >
+    <div className="group block bg-white border border-zinc-200 p-6 md:p-8 hover:border-zinc-900 transition-colors duration-500">
       <div className="flex justify-between items-start mb-8 pb-6 border-b border-zinc-100">
         <div>
           <span className="block text-[10px] uppercase tracking-[0.2em] text-zinc-400 mb-1">
@@ -63,15 +71,20 @@ export default function OrderCard({ order }) {
 
         <div className="space-y-3">
           {order.items.map((item, index) => {
-
+            const product=products.find(p => p.id===Number(item.product_id));
+            console.log(product);
             return(
             <div key={index} className="flex justify-between items-center text-sm">
               <div className="flex items-center text-zinc-600">
                 <span className="w-6 text-zinc-400 font-serif italic text-xs">
                   {item.quantity}x
                 </span>
-                <span className="capitalize">{item.name}</span>
-                <span><Link to={`/subcategory/${item.subcategory}/product/${item.product_id}`}>View Product</Link></span>
+                <div>
+                  <div className="capitalize">{item.name}</div>
+                  <div className="mt-2">
+                    <Link  to={`/subcategory/${item.subcategory}/product/${item.product_id}`} state={{ product }} className="text-[12px] uppercase tracking-[0.15em] text-zinc-400 hover:text-zinc-900 transition-colors duration-300">View Product →</Link>
+                  </div>
+                </div>
               </div>
             </div>
           )})}
@@ -99,6 +112,6 @@ export default function OrderCard({ order }) {
           </span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

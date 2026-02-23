@@ -6,10 +6,11 @@ export default function Subcategory() {
     const { subcategory } = useParams();
     const decodedSubcategory = decodeURIComponent(subcategory);
     const location = useLocation();
+    console.log(decodedSubcategory===subcategory);
 
     const allproducts = location.state?.allproducts || [];
     const filteredProducts = allproducts.filter(
-        p => p.item_subcategory === decodedSubcategory
+        p => p.item_subcategory?.trim().toLowerCase() === decodedSubcategory.trim().toLowerCase()
     );
 
     const getImageUrl = (path) => path ? `https://mv-enterprises-4.onrender.com${path}` : null;
@@ -53,7 +54,7 @@ export default function Subcategory() {
                             
                             return (
                                 <div key={product.id} className="group flex flex-col cursor-pointer">
-                                    <Link to={`/subcategory/${encodeURIComponent(decodedSubcategory)}/product/${product.id}`} state={{ product }}>
+                                    <Link to={`/subcategory/${decodedSubcategory}/product/${product.id}`} state={{ product }}>
  
                                         <div className="w-full aspect-[3/4] bg-gray-100 overflow-hidden mb-5 relative">
                                             {imageUrl ? (
@@ -71,7 +72,7 @@ export default function Subcategory() {
 
                                         <div className="flex flex-col items-center text-center">
                                             <h3 className="text-sm font-serif text-black mb-2 transition-colors duration-300 group-hover:text-gray-500">
-                                                {product.item_name}
+                                                {product.item_name.slice(0,60)}...
                                             </h3>
                                             
                                             <div className="flex items-center gap-3 text-xs tracking-widest">
