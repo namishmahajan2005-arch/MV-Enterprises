@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, ProductMedia, Order, OrderUpdate, Review
+from .models import Product, ProductMedia, Order, OrderUpdate, Review, Contact
 
 # Register your models here.
 class ProductMediaInline(admin.TabularInline):
@@ -13,3 +13,4 @@ class ProductAdmin(admin.ModelAdmin):
 admin.site.register(Order)
 admin.site.register(OrderUpdate)
 admin.site.register(Review)
+admin.site.register(Contact)

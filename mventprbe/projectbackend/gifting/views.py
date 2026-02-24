@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from .models import Product, Order, OrderUpdate
+from .models import Product, Order, OrderUpdate, Review
 from django.db.models import Q, OuterRef, Subquery
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -25,6 +25,34 @@ def searchProduct(request):
     for product in products:
         all_prod.append({"id":product.id,"item_name": product.item_name,"item_category": product.item_category,"item_subcategory": product.item_subcategory,"item_description": product.item_description,"item_oldprice":str(product.item_oldprice),"item_newprice":str(product.item_newprice),"images": [img.image.url for img in product.images.all()]})
     return JsonResponse(all_prod, safe=False)
+
+def reviews(request,product_id):
+    if request.method == "GET":
+        reviews = Review.objects.filter(product_id=product_id).select_related('user')
+
+        data = []
+        for r in reviews:
+            data.append({
+                "review_no": r.review_no,
+                "rating": r.rating,
+                "comment": r.comment,
+                "user": r.user.username,
+                "review_at": r.review_at.strftime("%Y-%m-%d %H:%M")
+            })
+
+        return JsonResponse(data, safe=False)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def addReviews(request, product_id):
+    product=Product.objects.filter(id=product_id)
+    comment=request.data.get("comment")
+    rating=request.data.get("rating")
+
+    if not all([product,comment,rating]):
+        return Response({"error":"Missing required fields"},status=status.HTTP_400_BAD_REQUEST)
+    new_review=Review.objects.create(comment=comment,rating=rating,user=request.user,product=product)
+
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])

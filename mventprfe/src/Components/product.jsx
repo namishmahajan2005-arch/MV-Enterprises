@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Navbar } from './navbar';
 import { useLocation } from "react-router-dom";
-import { FiPlus, FiMinus, FiChevronLeft, FiChevronRight } from "react-icons/fi"; // Thinner, premium icons
+import { FiPlus, FiMinus, FiChevronLeft, FiChevronRight } from "react-icons/fi"; 
+import ReviewCard from './reviewcard';
 
 export default function Product() {
     const location = useLocation();
@@ -102,6 +103,15 @@ export default function Product() {
 
     const getImageUrl = (path) => `https://mv-enterprises-4.onrender.com${path}`;
 
+    const [reviews,setReviews]=useState([]);
+
+    useEffect(()=>{
+        fetch(`https://mv-enterprises-4.onrender.com/products/${product.id}/reviews/`)
+        .then(res => res.JSON())
+        .then(data => setReviews(data))
+        .catch(err => console.log("Failed to load Reviews",err))
+    },product)
+
     return (
         <div className="min-h-screen bg-[#FAFAFA] font-sans text-[#1A1A1A]">
             <Navbar />
@@ -161,7 +171,7 @@ export default function Product() {
                     </div>
 
                     <div className="w-full lg:w-2/5 flex flex-col">
-                        <div className="">
+                        <div>
                             
                             <h4 className="text-2xl lg:text-4xl font-serif text-black mb-4">{product.item_name}</h4>
                             <div className="flex items-center gap-4 mb-8">
@@ -200,6 +210,18 @@ export default function Product() {
                                 {qty > 0 ? 'Add Another to Bag' : 'Add to Bag'}
                             </button>
 
+                        </div>
+
+                        <div>
+                            <h2 className="text-xl font-semibold mt-6">Customer Reviews</h2>
+
+                            {reviews.length === 0 && (
+                                <p className="text-gray-500">No reviews yet</p>
+                            )}
+
+                            {reviews.map(review => (
+                                <ReviewCard key={review.review_no} review={review} />
+                            ))}
                         </div>
                     </div>
 
