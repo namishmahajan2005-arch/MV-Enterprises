@@ -108,7 +108,7 @@ export default function OrderCard({ order }) {
             </span>
           )}
           <span className="text-xs uppercase tracking-[0.15em] text-zinc-400 group-hover:text-zinc-900 transition-colors duration-300 flex items-center gap-2">
-            View Details <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
+            View Order Details <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
           </span>
         </div>
       </div>

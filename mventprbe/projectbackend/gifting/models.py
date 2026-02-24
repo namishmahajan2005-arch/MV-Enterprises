@@ -1,6 +1,8 @@
 from django.db import models
 from tinymce.models import HTMLField
 from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db.models import Avg
 
 # Create your models here.
 class Product(models.Model):
@@ -11,6 +13,9 @@ class Product(models.Model):
     item_newprice=models.DecimalField(max_digits=10, decimal_places=2)
     item_description=HTMLField()
     item_instock=models.BooleanField(default=True)
+
+    def average_rating(self):
+        return self.review_set.aggregate(Avg('rating'))['rating__avg'] or 0
 
     def __str__(self):
         return f"{self.id}. {self.item_name}"
@@ -57,4 +62,32 @@ class OrderUpdate(models.Model):
 
     def __str__(self):
         return f"{self.order.order_id}. ({self.order.user}) --> {self.status}"
+    
+class Review(models.Model):
+    review_no=models.AutoField(primary_key=True)
+    comment=models.TextField()
+    rating = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        help_text="Rating from 1 to 5 stars"
+    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    product=models.ForeignKey(Product, on_delete=models.CASCADE)
+    review_at=models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'product')
+
+    def __str__(self):
+        return f"{self.review_no}. {self.user} for {self.product.item_name[:75]}..."
+    
+class Contact(models.Model):
+    issue_id=models.AutoField(primary_key=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name=models.CharField(max_length=50)
+    email=models.CharField(max_length=50,default="")
+    phone=models.IntegerField(default="")
+    issue=models.CharField(max_length=900,default="")
+    
+    def __str__(self):
+        return f"{self.issue_id}. {self.user}"
     
