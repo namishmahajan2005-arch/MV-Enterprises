@@ -45,6 +45,7 @@ def reviews(request,product_id):
 
         return JsonResponse({"data":data,"average_rating":average_rating})
 
+@api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def can_review(request,product_id):
     user = request.user
