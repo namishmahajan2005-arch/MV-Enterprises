@@ -100,7 +100,7 @@ export default function Product() {
         setIsSubmitting(true);
         
         try {
-            const response = await authFetch(`https://mv-enterprises-4.onrender.com/products/${product.id}/addreviews/`, {
+            const response = await authFetch(`https://mv-enterprises-4.onrender.com/products/${product.id}/addreviews`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

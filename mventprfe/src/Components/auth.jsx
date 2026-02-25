@@ -53,5 +53,5 @@ export function logout() {
   localStorage.removeItem("refresh");
   localStorage.removeItem("username");
   alert("You are being Logged out");
-  window.location.href = "/login";
+  window.location.href = "/";
 }

@@ -62,7 +62,7 @@ def can_review(request,product_id):
             
     return Response({"can_review":False},status=status.HTTP_200_OK)
 
-@api_view(["GET"])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def addReviews(request, product_id):
     product=Product.objects.filter(id=product_id)
