@@ -65,13 +65,27 @@ def can_review(request,product_id):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def addReviews(request, product_id):
-    product=Product.objects.filter(id=product_id)
-    comment=request.data.get("comment")
-    rating=request.data.get("rating")
+    try:
+        product = Product.objects.get(id=product_id)
+    except Product.DoesNotExist:
+        return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    if not all([product,comment,rating]):
-        return Response({"error":"Missing required fields"},status=status.HTTP_400_BAD_REQUEST)
-    new_review=Review.objects.create(comment=comment,rating=rating,user=request.user,product=product)
+    comment = request.data.get("comment", "").strip()
+    rating = request.data.get("rating")
+
+    if not comment or rating is None:
+        return Response({"error": "Missing required fields"}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        rating = int(rating)
+        if rating < 1 or rating > 5:
+            raise ValueError
+    except ValueError:
+        return Response({"error": "Rating must be between 1 and 5"}, status=status.HTTP_400_BAD_REQUEST) 
+
+    new_review = Review.objects.create( product=product, user=request.user, rating=rating, comment=comment)
+
+    return Response({"id": new_review.id, "rating": new_review.rating, "comment": new_review.comment, "user": new_review.user.username}, status=status.HTTP_201_CREATED)
 
 
 @api_view(["POST"])
