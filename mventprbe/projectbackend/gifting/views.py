@@ -52,14 +52,14 @@ def can_review(request,product_id):
     has_purchased = Order.objects.filter(
         user=user,
         completed=True,     
-    ).exists()
+    )
 
     for order in has_purchased:
         for item in order.items_json:
             if item.get("product_id") == product_id:
                 return JsonResponse({"can_review": True})
-            else:
-                return Response({"error":"You cannot add review to this product"},status=status.HTTP_401_UNAUTHORIZED)
+            
+    return Response({"can_review":False},status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])

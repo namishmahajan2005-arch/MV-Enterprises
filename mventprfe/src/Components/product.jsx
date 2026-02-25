@@ -256,17 +256,22 @@ export default function Product() {
                         </div>
 
                         <div>
-                            <h2 className="text-xl font-semibold mt-6 mb-6">Customer Reviews</h2>
+                            <h2 className="text-xl font-semibold mt-6 mb-6">Customer Reviews {reviews?.average_rating && (
+                            <span className="text-sm text-gray-600">{reviews.average_rating.toFixed(1)}</span>
+                            )}</h2>
+
+
+                            <div className="space-y-4 mb-8">
+                                {Array.isArray(reviews?.data) &&
+                                reviews.data.map((review) => (
+                                    <ReviewCard key={review.review_no || review.id} review={review}/>
+                                ))
+                                }
+                            </div>
 
                             {reviews.length === 0 && (
                                 <p className="text-gray-500 text-sm mb-6">No reviews yet.</p>
                             )}
-
-                            <div className="space-y-4 mb-8">
-                                {reviews.map(review => (
-                                    <ReviewCard key={review.review_no || review.id} review={review} />
-                                ))}
-                            </div>
 
                             {canreview ? (
                                 <div className="border-t border-gray-200 pt-8 mt-8">
