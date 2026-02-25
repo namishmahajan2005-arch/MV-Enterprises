@@ -3,6 +3,7 @@ import { Navbar } from './navbar';
 import { useLocation } from "react-router-dom";
 import { FiPlus, FiMinus, FiChevronLeft, FiChevronRight } from "react-icons/fi"; 
 import ReviewCard from './reviewcard';
+import { authFetch } from '../utils/authFetch';
 
 export default function Product() {
     const location = useLocation();
@@ -90,6 +91,38 @@ export default function Product() {
         }
     };
 
+    const [rating, setRating] = useState(5);
+    const [reviewText, setReviewText] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleReviewSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        
+        try {
+            const response = await authFetch(`https://mv-enterprises-4.onrender.com/products/${product.id}/addreviews/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ rating: rating, comment: reviewText })
+            });
+
+            if (response.ok) {
+                const newReview = await response.json();
+                setReviews((prevReviews) => [...prevReviews, newReview]);
+                setReviewText("");
+                setRating(5);
+            } else {
+                console.error("Failed to post review");
+            }
+        } catch (error) {
+            console.error("Error submitting review:", error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     if (!product) {
         return (
             <div className="min-h-screen bg-[#FAFAFA] font-sans text-[#1A1A1A]">
@@ -107,10 +140,20 @@ export default function Product() {
 
     useEffect(()=>{
         fetch(`https://mv-enterprises-4.onrender.com/products/${product.id}/reviews/`)
-        .then(res => res.JSON())
+        .then(res => res.json())
         .then(data => setReviews(data))
         .catch(err => console.log("Failed to load Reviews",err))
-    },product)
+    },[product]);
+    console.log(reviews);
+
+    const [canreview,setCanreview]=useState(false);
+    useEffect(()=>{
+        authFetch(`https://mv-enterprises-4.onrender.com/products/${product.id}/canreview/`)
+        .then(res => res.json())
+        .then(data => setCanreview(data.can_review))
+        .catch(err => setCanreview(false))
+    },[product]);
+
 
     return (
         <div className="min-h-screen bg-[#FAFAFA] font-sans text-[#1A1A1A]">
@@ -213,15 +256,69 @@ export default function Product() {
                         </div>
 
                         <div>
-                            <h2 className="text-xl font-semibold mt-6">Customer Reviews</h2>
+                            <h2 className="text-xl font-semibold mt-6 mb-6">Customer Reviews</h2>
 
                             {reviews.length === 0 && (
-                                <p className="text-gray-500">No reviews yet</p>
+                                <p className="text-gray-500 text-sm mb-6">No reviews yet.</p>
                             )}
 
-                            {reviews.map(review => (
-                                <ReviewCard key={review.review_no} review={review} />
-                            ))}
+                            <div className="space-y-4 mb-8">
+                                {reviews.map(review => (
+                                    <ReviewCard key={review.review_no || review.id} review={review} />
+                                ))}
+                            </div>
+
+                            {canreview ? (
+                                <div className="border-t border-gray-200 pt-8 mt-8">
+                                    <h3 className="text-lg font-serif mb-6">Write a Review</h3>
+                                    <form onSubmit={handleReviewSubmit}>
+                                        <div className="mb-5">
+                                            <label className="block text-[11px] uppercase tracking-widest text-gray-500 mb-3">Rating</label>
+                                            <div className="flex gap-2">
+                                                {[1, 2, 3, 4, 5].map((star) => (
+                                                    <button
+                                                        type="button"
+                                                        key={star}
+                                                        onClick={() => setRating(star)}
+                                                        className={`text-2xl leading-none focus:outline-none transition-colors ${
+                                                            star <= rating ? 'text-black' : 'text-gray-200 hover:text-gray-400'
+                                                        }`}
+                                                    >
+                                                        ★
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <div className="mb-6">
+                                            <label htmlFor="reviewText" className="block text-[11px] uppercase tracking-widest text-gray-500 mb-3">
+                                                Your Review
+                                            </label>
+                                            <textarea
+                                                id="reviewText"
+                                                value={reviewText}
+                                                onChange={(e) => setReviewText(e.target.value)}
+                                                required
+                                                rows="4"
+                                                className="w-full border border-gray-300 bg-transparent p-4 text-sm focus:outline-none focus:border-black transition-colors resize-none placeholder-gray-300"
+                                                placeholder="Share your thoughts about this product..."
+                                            />
+                                        </div>
+
+                                        <button 
+                                            type="submit" 
+                                            disabled={isSubmitting}
+                                            className="bg-black text-white uppercase tracking-[0.2em] text-xs py-4 px-8 hover:bg-gray-800 transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                                        >
+                                            {isSubmitting ? 'Posting...' : 'Post Review'}
+                                        </button>
+                                    </form>
+                                </div>
+                            ) : (
+                                <p className="text-sm text-gray-400 mt-4 italic">
+                                    Only customers who purchased this product can write a review.
+                                </p>
+                            )}
                         </div>
                     </div>
 

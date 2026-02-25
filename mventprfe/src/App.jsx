@@ -12,6 +12,7 @@ import Profile from './Components/profile';
 import MyOrders from './Components/myorders';
 import OrderDetails from './Components/orderdetails';
 import Wishlist from './Components/wishlist';
+import Contact from './Components/contact';
 
 function App() {
   
@@ -29,8 +30,9 @@ function App() {
           <Route path='/login/register' element={<Register/>}/>
           <Route path='/profile' element={<Profile/>} />
           <Route path='/my-orders' element={<MyOrders/>} />
-          <Route path="/orders/:id" element={<OrderDetails />} />
+          <Route path='/orders/:id' element={<OrderDetails />} />
           <Route path='/wishlist' element={<Wishlist/>} />
+          <Route path='/contact' element={<Contact/>} />
         </Routes>
       </BrowserRouter>
     </>

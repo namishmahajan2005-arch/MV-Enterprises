@@ -15,7 +15,7 @@ export default function ReviewCard({ review }) {
       <StarRating rating={review.rating} />
       <p className="mt-1">{review.comment}</p>
       <p className="text-sm text-gray-500">
-        — {review.user_name}
+        — {review.user}
       </p>
     </div>
   );

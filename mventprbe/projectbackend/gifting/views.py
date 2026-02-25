@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from .models import Product, Order, OrderUpdate, Review
+from .models import Product, Order, OrderUpdate, Review, Contact
 from django.db.models import Q, OuterRef, Subquery
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -40,7 +40,26 @@ def reviews(request,product_id):
                 "review_at": r.review_at.strftime("%Y-%m-%d %H:%M")
             })
 
-        return JsonResponse(data, safe=False)
+        product = Product.objects.get(id=product_id)
+        average_rating = product.average_rating()
+
+        return JsonResponse({"data":data,"average_rating":average_rating})
+
+@permission_classes([IsAuthenticated])
+def can_review(request,product_id):
+    user = request.user
+
+    has_purchased = Order.objects.filter(
+        user=user,
+        completed=True,     
+    ).exists()
+
+    for order in has_purchased:
+        for item in order.items_json:
+            if item.get("product_id") == product_id:
+                return JsonResponse({"can_review": True})
+            else:
+                return Response({"error":"You cannot add review to this product"},status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -168,3 +187,18 @@ def orderDetails(request, order_id):
         },
         "updates":[{"status":u.status, "message":u.message, "time":u.update_at} for u in updates]
     },status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def contact(request):
+    name=request.data.get("name")
+    email=request.data.get("email")
+    phone=request.data.get("phone")
+    issue=request.data.get("query")
+
+    if not all([name,email,phone,issue]):
+        return Response({"error":"Failed to load your Query"},status=status.HTTP_400_BAD_REQUEST)
+    
+    new_query=Contact.objects.create(user=request.user,name=name,email=email,phone=phone,issue=issue)
+
+    return Response({"message":"Complaint sent successfully"},status=status.HTTP_201_CREATED)
