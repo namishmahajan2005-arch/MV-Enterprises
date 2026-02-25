@@ -57,9 +57,9 @@ def can_review(request,product_id):
     for order in has_purchased:
         for item in order.items_json:
             if item.get("product_id") == product_id:
-                return JsonResponse({"can_review": True})
+                return Response({"can_review": True},status=status.HTTP_200_OK)
             
-    return Response({"can_review":False},status=status.HTTP_401_UNAUTHORIZED)
+    return Response({"can_review":False},status=status.HTTP_200_OK)
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
